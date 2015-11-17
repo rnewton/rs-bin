@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function read_yes_no {
+    echo -en "$1 (y|n) "
+
+    conf=""
+    while [[ ! $conf =~ ^[yn]$ ]]; do read -n 1 -r -s conf; done
+    echo $conf
+
+    export "$2"="$conf"
+}
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 REPO [SITE]"
+    exit 1
+fi
+
+repo="$1"
+out="$HOME/$2"
+
+read_yes_no "Run \`ant init\`" antInit
+gitclone "$repo" "$out" || exit 1
+
+cd "$out"
+if [ "$antInit" != "n" ]; then
+    ant init
+fi
+
+echo "Linking vhosts..."
+vhosts | grep "$out"
+
+exit 0

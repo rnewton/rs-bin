@@ -1,0 +1,3 @@
+#!/bin/bash
+
+who | grep -v ':pts\/' | sed -nr 's/(\w*) .*(\(.*\))/\1 \2/p' | sort | uniq | sed -r 's/\(cpe-98-26-40-151\.nc\.res\.rr\.com\)/\<- in the office/' | sed -r 's/ \(.*\)//'

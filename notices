@@ -1,0 +1,11 @@
+#!/bin/bash
+
+config=application/configs/aje.ini
+
+level="E_ALL"
+
+if [ "$1" == "off" ]; then
+    level="$level \& ~E_NOTICE"
+fi
+
+sed -i "s/^phpSettings.error_reporting = .*$/phpSettings.error_reporting = $level/" $config

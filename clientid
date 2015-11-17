@@ -1,0 +1,7 @@
+#!/bin/bash
+
+config=application/configs/aje.ini
+key="$(uuidgen)"
+
+sed -i "s/^identity.client_id = ''$/identity.client_id = '$key'/" $config
+sed -i "s/^identity.client_secret = ''$/identity.client_secret = '$key'/" $config

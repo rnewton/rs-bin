@@ -1,0 +1,26 @@
+#!/bin/bash
+
+VHOST_DIR="/wwwroot/vhosts"
+
+rm -f "$VHOST_DIR/$USER"*
+
+for DIR in "$HOME"/*; do
+    [ ! -d "$DIR" ] && continue
+
+    TARGET=""
+    if [ -d "$DIR/public" ]; then
+        TARGET="$DIR/public"
+    elif [ -d "$DIR/dist" ]; then
+        TARGET="$DIR/dist"
+    elif [ -d "$DIR/_site" ]; then
+        TARGET="$DIR/_site"
+    elif [ -f "$DIR/index.php" ]; then
+        TARGET="$DIR"
+    fi
+
+    [ -z "$TARGET" ] && continue
+
+    VHOST="$USER-$(basename "$DIR").dev.sqr.io"
+    ln -s "$TARGET" "$VHOST_DIR/$VHOST"
+    echo "https://$VHOST -> $TARGET"
+done

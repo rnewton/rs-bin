@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 REPO DEST"
+    exit 1
+fi
+
+repo="$1"
+out="$2"
+
+if [ -z "$out" ]; then
+    out="$repo"
+fi
+
+git clone git@github.com:researchsquare/"$1".git "$2"

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cat ~/.clipboard
+#vim -T dumb --noplugin -n -e -c 'set nomore' -c 'echo @0' +qall
