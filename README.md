@@ -17,6 +17,8 @@ A shortcut for cloning a researchsquare repository.
 
 ## vhosts
 
+Usage: `vhosts`
+
 Automatically create vhosts for every site in your home directory.
 
 ## Utilities specific to AJE
