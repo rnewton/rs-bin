@@ -50,9 +50,3 @@ filename.
 Usage: `inoffice`
 
 Find out who is in the office and logged into the current server.
-
-### netpaste
-
-Usage: `netpaste`
-
-Output the current vim paste buffer.
