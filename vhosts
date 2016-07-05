@@ -2,25 +2,95 @@
 
 VHOST_DIR="/wwwroot/vhosts"
 
+function createVhost() {
+    local name="$1"
+    local target="$2"
+
+    local vhost="$USER-$name.dev.sqr.io"
+
+    ln -s "$target" "$VHOST_DIR/$vhost"
+    echo "https://$vhost -> $target"
+}
+
 rm -f "$VHOST_DIR/$USER"*
 
-for DIR in "$HOME"/*; do
-    [ ! -d "$DIR" ] && continue
+for dir in "$HOME"/*; do
+    [ ! -d "$dir" ] && continue
 
-    TARGET=""
-    if [ -d "$DIR/public" ]; then
-        TARGET="$DIR/public"
-    elif [ -d "$DIR/dist" ]; then
-        TARGET="$DIR/dist"
-    elif [ -d "$DIR/_site" ]; then
-        TARGET="$DIR/_site"
-    elif [ -f "$DIR/index.php" ]; then
-        TARGET="$DIR"
+    name=$(basename "$dir")
+    publicSubDirVhost=false
+
+    # aje-microsites
+    if [ -d "$dir/public/arc" ]; then
+        createVhost "$name-arc" "$dir/public/arc"
+        publicSubDirVhost=true
     fi
 
-    [ -z "$TARGET" ] && continue
+    if [ -d "$dir/public/arc-china" ]; then
+        createVhost "$name-arc-china" "$dir/public/arc-china"
+        publicSubDirVhost=true
+    fi
 
-    VHOST="$USER-$(basename "$DIR").dev.sqr.io"
-    ln -s "$TARGET" "$VHOST_DIR/$VHOST"
-    echo "https://$VHOST -> $TARGET"
+    if [ -d "$dir/public/arc-japan" ]; then
+        createVhost "$name-arc-japan" "$dir/public/arc-japan"
+        publicSubDirVhost=true
+    fi
+
+    if [ -d "$dir/public/arc-korea" ]; then
+       createVhost "$name-arc-korea" "$dir/public/arc-korea"
+       publicSubDirVhost=true
+    fi
+
+
+    if [ -d "$dir/public/en" ]; then
+        createVhost "$name-en" "$dir/public/en"
+        publicSubDirVhost=true
+    fi
+
+    if [ -d "$dir/public/es" ]; then
+        createVhost "$name-es" "$dir/public/es"
+        publicSubDirVhost=true
+    fi
+
+    if [ -d "$dir/public/china" ]; then
+        createVhost "$name-china" "$dir/public/china"
+        publicSubDirVhost=true
+    fi
+
+    if [ -d "$dir/public/japan" ]; then
+        createVhost "$name-japan" "$dir/public/japan"
+        publicSubDirVhost=true
+    fi
+
+    if [ -d "$dir/public/korea" ]; then
+        createVhost "$name-korea" "$dir/public/korea"
+        publicSubDirVhost=true
+    fi
+
+    if [ -d "$dir/public/pt" ]; then
+        createVhost "$name-pt" "$dir/public/pt"
+        publicSubDirVhost=true
+    fi
+
+    # jekyll sites
+    if [ -d "$dir/dist" ]; then
+        createVhost "$name" "$dir/dist"
+    elif [ -d "$dir/_site" ]; then
+        createVhost "$name" "$dir/_site"
+    fi
+
+    # Just a php file
+    if [ -f "$dir/index.php" ]; then
+        createVhost "$name" "$dir"
+    fi
+
+    # Reverse-proxy sites
+    if [ -f "$dir/.port" ]; then
+        createVhost "$name.rp" "$dir"
+    fi
+
+    # Pretty much everything else
+    if [[ "$publicSubDirVhost" = false && -d "$dir/public" ]]; then
+        createVhost "$name" "$dir/public"
+    fi
 done
